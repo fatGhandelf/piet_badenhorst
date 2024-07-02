@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Image Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        .image-container {
+            position: relative;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            max-width: 80%;
+            max-height: 70%;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .centered-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+        .image-border {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid red;
+            border-radius: 20px;
+            filter: blur(5px);
+            z-index: -1;
+        }
+        @keyframes glowing-red {
+            0% { opacity: 0.5; box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+            50% { opacity: 1; box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); }
+            100% { opacity: 0.5; box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        }
+        .image-container {
+            animation: glowing-red 3s ease-in-out infinite;
+        }
+        .blinking-text {
+            font-size: 1.5em;
+            text-align: center;
+            text-decoration: none;
+            color: #ff0000;
+            cursor: pointer;
+        }
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .blinking-text {
+            animation: blink 3s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <a href='image-page_02.html' target="_blank" rel="noopener noreferrer" class="image-container">
+        <img src="image_01.jpg" alt="Centered Image" class="centered-image">
+        <div class="image-border"></div>
+    </a>
+    <a href='image-page_02.html' target="_blank" rel="noopener noreferrer" class="blinking-text">
+        Kom groot man, click hier 😈
+    </a>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+
+        const columns = Math.floor(canvas.width / 20);
+        const drops = new Array(columns).fill(1);
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f0';
+            ctx.font = '15px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = String.fromCharCode(Math.random() * 128);
+                ctx.fillText(text, i * 20, drops[i] * 20);
+
+                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i] += 0.8;
+            }
+        }
+
+        setInterval(draw, 41);
+
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>
